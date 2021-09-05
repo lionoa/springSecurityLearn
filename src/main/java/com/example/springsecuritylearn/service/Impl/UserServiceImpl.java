@@ -37,8 +37,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int register(User user) {
+    public R register(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return userMapper.insert(user);
+        int result =  userMapper.insert(user);
+        return R.ok(result);
     }
 }
