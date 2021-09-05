@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springsecuritylearn.mapper.UserMapper">
+    <select id="getUsers" resultType="User">
+        select * from `user`
+        <where>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
+        </where>
+    </select>
+
+    <select id="getRoles" resultType="Role">
+        select *
+        from `role`;
+    </select>
+
+    <select id="getUserRoles" resultType="UserRole">
+        select *
+        from `user_role`
+    </select>
+
+    <select id="getUserByUsername" resultType="User">
+        select *
+        from `user`
+        where username = #{username};
+    </select>
+
+    <select id="getAuthority" resultType="String">
+        select role_name as authority
+        from `role` as a
+        left join `user_role` b
+        on a.id = b.role_id
+        where b.user_id = #{id};
+    </select>
+
+    <insert id="insertUser" parameterType="User" keyProperty="id" useGeneratedKeys="true">
+        insert into `user` (id, username, password)
+        values (null, #{username}, #{password});
+    </insert>
+
+    <insert id="insertUserRole" parameterType="UserRole">
+        insert into `user_role` (id, user_id, role_id)
+        values (null, #{user_id}, #{role_id});
+    </insert>
+
+    <insert id="insertRole" parameterType="Role">
+        insert into `role` (id, role_name)
+        values (null, #{role_name});
+    </insert>
+</mapper>

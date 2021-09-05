@@ -2,6 +2,7 @@ package com.example.springsecuritylearn.service;
 
 import com.example.springsecuritylearn.entity.MyUserDetails;
 import com.example.springsecuritylearn.entity.User;
+import com.example.springsecuritylearn.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +21,9 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userService.getUserByUsername(s);
@@ -28,7 +32,7 @@ public class MyUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("用户名不存在");
         }
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getAuthority()));
+        authorities.add(new SimpleGrantedAuthority(userMapper.getAuthority(user.getId())));
         return new MyUserDetails(user.getUsername(), user.getPassword(), authorities);
     }
 }

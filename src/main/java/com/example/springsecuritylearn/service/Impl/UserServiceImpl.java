@@ -1,7 +1,9 @@
 package com.example.springsecuritylearn.service.Impl;
 
+import com.example.springsecuritylearn.common.Code;
 import com.example.springsecuritylearn.common.R;
 import com.example.springsecuritylearn.entity.User;
+import com.example.springsecuritylearn.entity.UserRole;
 import com.example.springsecuritylearn.mapper.UserMapper;
 import com.example.springsecuritylearn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,10 +39,17 @@ public class UserServiceImpl implements UserService {
         return R.ok(authenticate.getPrincipal());
     }
 
+    // 默认注册的都是 USER 权限
     @Override
+    @Transactional
     public R register(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        int result =  userMapper.insert(user);
-        return R.ok(result);
+        int result = userMapper.insertUser(user);
+        int id = user.getId();
+        int i = userMapper.insertUserRole(new UserRole(null, id, 2));
+        if (result == 1 && i == 1) {
+            return R.ok();
+        }
+        return R.send(Code.ERROR, "注册失败！");
     }
 }

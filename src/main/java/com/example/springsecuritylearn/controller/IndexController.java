@@ -75,7 +75,7 @@ public class IndexController {
 
     @GetMapping("/register/{username}/{password}")
     public R register(@PathVariable String username, @PathVariable String password) {
-        return userService.register(new User(null, username, password, "USER"));
+        return userService.register(new User(null, username, password));
     }
 
     @GetMapping("/login/{username}/{password}")

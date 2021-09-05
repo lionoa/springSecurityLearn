@@ -1,15 +1,21 @@
 package com.example.springsecuritylearn.mapper;
 
+import com.example.springsecuritylearn.entity.Role;
 import com.example.springsecuritylearn.entity.User;
-import org.apache.ibatis.annotations.Insert;
+import com.example.springsecuritylearn.entity.UserRole;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    @Select("select * from user where username = #{username}")
+    List<User> getUsers();
+    User getUsers(String username);
+    List<Role> getRoles();
+    List<UserRole> getUserRoles();
+    String getAuthority(Integer userId);
     User getUserByUsername(String username);
-
-    @Insert("insert into user (id,username,password,authority) values (null,#{username},#{password},#{authority})")
-    int insert(User user);
+    int insertUser(User user);
+    int insertUserRole(UserRole userRole);
+    int insertRole(Role role);
 }
