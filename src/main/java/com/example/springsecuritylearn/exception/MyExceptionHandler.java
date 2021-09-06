@@ -18,16 +18,19 @@ public class MyExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody // 返回的是信息，不是页面
     public R myExceptionHandler(Exception e) {
-        log.info(e.getClass().getName());
         if (e instanceof BadCredentialsException) {
+            log.info("用户名或密码错误");
             return R.send(Code.BAD_CREDENTIALS, "用户名或密码错误！");
         }
         if (e instanceof DuplicateKeyException) {
+            log.info("用户名已存在!");
             return R.send(Code.USERNAME_UNIQUE, "用户名已存在！");
         }
         if (e instanceof AccessDeniedException) {
+            log.info("权限不足");
             return R.send(Code.ACCESS_DENIED, "权限不足");
         }
+        log.info("{} {}", e.getClass(), e.getMessage());
         return R.send(Code.UN_KNOW_ERROR, "页面访问异常，请重试！");
     }
 }

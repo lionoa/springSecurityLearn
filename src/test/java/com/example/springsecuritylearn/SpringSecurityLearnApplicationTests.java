@@ -4,6 +4,7 @@ import com.example.springsecuritylearn.common.R;
 import com.example.springsecuritylearn.entity.Role;
 import com.example.springsecuritylearn.entity.User;
 import com.example.springsecuritylearn.entity.UserRole;
+import com.example.springsecuritylearn.mapper.RoleResourceMapper;
 import com.example.springsecuritylearn.mapper.UserMapper;
 import com.example.springsecuritylearn.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -47,13 +48,13 @@ class SpringSecurityLearnApplicationTests {
     @Test
     @Transactional(rollbackFor = Exception.class)
     void insert() throws Exception {
-        int user = userMapper.insertUser(new User(null, "小李", bCryptPasswordEncoder.encode("123456")));
+        int user = userMapper.insertUser(new User(null, "admin", bCryptPasswordEncoder.encode("123456")));
         System.out.println(user);
 
         int i = userMapper.insertUserRole(new UserRole(null, 7, 2));
         System.out.println(i);
 
-        int hello = userMapper.insertRole(new Role(null, "HELLO"));
+        int hello = userMapper.insertRole(new Role(null, "ADMIN"));
         System.out.println(hello);
 
         throw new Exception("手动抛出异常");
@@ -61,8 +62,8 @@ class SpringSecurityLearnApplicationTests {
     
     @Test
     void getUserId() {
-        User user = new User(null, "helloWorld", "123");
-        int i = userMapper.insertUser(user);
+        User user = new User(null, "admin", "123456");
+        userMapper.insertUser(user);
         int id = user.getId();
         System.out.println(id);
     }
@@ -74,5 +75,16 @@ class SpringSecurityLearnApplicationTests {
     void userService() {
         R register = userService.register(new User(null, "lionoa", "lionoa123"));
         System.out.println(register.toString());
+    }
+
+    @Autowired
+    private RoleResourceMapper roleResourceMapper;
+    @Test
+    void roleResourceMapper() {
+        List<String> userResources = roleResourceMapper.getUserResources();
+        List<String> adminResources = roleResourceMapper.getAdminResources();
+        System.out.println(userResources);
+        System.out.println("==================================");
+        System.out.println(adminResources);
     }
 }

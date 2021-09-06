@@ -39,11 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // 跨域资源共享
         http.cors();
-
-        // 注册 sessionRegistry Bean
-        http.sessionManagement()
-                .maximumSessions(1)
-                .sessionRegistry(sessionRegistry());
     }
 
     @Override

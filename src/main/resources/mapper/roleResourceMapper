@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springsecuritylearn.mapper.RoleResourceMapper">
+    <select id="getUserResources" resultType="String">
+        SELECT resource_path
+        FROM resource A
+                 JOIN (SELECT resource_id
+                       FROM role_resource T
+                                JOIN (SELECT id FROM role WHERE role_name = 'ROLE_USER') O ON O.id = T.role_id) B
+                      ON B.resource_id = A.id;
+    </select>
+
+    <select id="getAdminResources" resultType="String">
+        select resource_path from resource;
+    </select>
+</mapper>
